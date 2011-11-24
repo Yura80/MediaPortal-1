@@ -44,6 +44,10 @@ public:
 
 private:
   
+  void ClearArea(const BD_OVERLAY* const ov);
+  void ClearOverlay(const BD_OVERLAY* const ov);
+  void DrawBitmap(const BD_OVERLAY* const ov);
+
   void DecodePalette(const BD_OVERLAY* const ov);
   void CloseOverlay();
 
