@@ -82,6 +82,10 @@ namespace TvLibrary.Implementations
     {
       ITunerCap _providerType;
       bool genericNP = false;
+      TvBusinessLayer layer = new TvBusinessLayer();
+      Setting setting;
+      setting = layer.GetSetting("iptvCardCount", "1");
+      int iptvCardCount = Convert.ToInt32(setting.Value);      
       //SkyStar 2 & IP Streaming
       DsDevice[] devices = DsDevice.GetDevicesOfCat(FilterCategory.LegacyAmFilterCategory);
       for (int i = 0; i < devices.Length; ++i)
@@ -95,10 +99,6 @@ namespace TvLibrary.Implementations
         }
         else if (String.Compare(devices[i].Name, "Elecard NWSource-Plus", true) == 0)
         {
-          TvBusinessLayer layer = new TvBusinessLayer();
-          Setting setting;
-          setting = layer.GetSetting("iptvCardCount", "1");
-          int iptvCardCount = Convert.ToInt32(setting.Value);
           for (int cardNum = 0; cardNum < iptvCardCount; cardNum++)
           {
             Log.Log.WriteFile("Detected IP TV Card " + cardNum);
@@ -108,10 +108,6 @@ namespace TvLibrary.Implementations
         }
         else if (String.Compare(devices[i].Name, "MediaPortal IPTV Source Filter", true) == 0)
         {
-          TvBusinessLayer layer = new TvBusinessLayer();
-          Setting setting;
-          setting = layer.GetSetting("iptvCardCount", "1");
-          int iptvCardCount = Convert.ToInt32(setting.Value);
           for (int cardNum = 0; cardNum < iptvCardCount; cardNum++)
           {
             Log.Log.WriteFile("Detected IP TV Card " + cardNum);
@@ -119,6 +115,15 @@ namespace TvLibrary.Implementations
             _cards.Add(card);
           }
         }
+        else if (String.Compare(devices[i].Name, "MediaPortal VLC Source Filter", true) == 0)
+        {
+          for (int cardNum = 0; cardNum < iptvCardCount; cardNum++)
+          {
+            Log.Log.WriteFile("Detected IP TV Card " + cardNum);
+            TvCardDVBIP card = new TvCardDVBIPVLC(_epgEvents, devices[i], cardNum);
+            _cards.Add(card);
+          }
+        }        
       }
       //Hauppauge HD PVR & Colossus
       devices = DsDevice.GetDevicesOfCat(FilterCategory.AMKSCrossbar);
